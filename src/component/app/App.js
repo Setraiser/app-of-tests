@@ -1,11 +1,13 @@
 import React from 'react';
+import Layout from '../../hoc/Layout';
+import Quiz from '../../containers/Quiz';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <h1>App of Tests</h1>
-    </div>
+    <Layout>
+      <Quiz />
+    </Layout>
   );
 }
 

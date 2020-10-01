@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
 import classes from './Auth.module.css';
 import Button from '../../components/UI/Button';
-import Input from '../../components/UI/input';
+import Input from '../../components/UI/Input';
 import is from 'is_js';
+import axios from 'axios';
 
 export default class Auth extends Component {
 
     state = {
+        isFormValid: false,
         formControls: {
             email: {
                 value: '',
@@ -35,12 +37,38 @@ export default class Auth extends Component {
         }
     }
 
-    loginHandler = () => {
+    loginHandler = async () => {
+        const {email, password} = this.state.formControls;
+        const apiKey = 'AIzaSyBTeLXSiM0GZQ58eIY5P_0I07EiUqlhB_c';
+        const authData = {
+            email: email.value,
+            password: password.value,
+            returnSecureToken: true
+        }
 
+        try {
+            const response = await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`, authData);
+            console.log(response);
+        } catch(e) {
+            console.log(e);
+        }
     }
 
-    registerHandler = () => {
+    registerHandler = async () => {
+        const {email, password} = this.state.formControls;
+        const apiKey = 'AIzaSyBTeLXSiM0GZQ58eIY5P_0I07EiUqlhB_c';
+        const authData = {
+            email: email.value,
+            password: password.value,
+            returnSecureToken: true
+        }
 
+        try {
+            axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`, authData);
+        } catch(e) {
+            console.log(e);
+        }
+        
     }
 
     submitHandler = (event) => {
@@ -79,8 +107,14 @@ export default class Auth extends Component {
 
         formControls[controlName] = control;
 
+        let isFormValid = true;
+
+        Object.keys(formControls).forEach((name) => {
+            isFormValid = formControls[name].valid && isFormValid;
+        })
+
         this.setState({
-            formControls
+            formControls, isFormValid
         })
     }
 
@@ -106,14 +140,11 @@ export default class Auth extends Component {
     }
 
     render() {
-
-
-
+        const {isFormValid} = this.state;
         return (
             <div className={classes.Auth}>
                 <div>
                     <h1>Авторизация</h1>
-
                     <form 
                         onSubmit={this.submitHandler}
                         className={classes.AuthForm}
@@ -122,12 +153,14 @@ export default class Auth extends Component {
                         <Button 
                             type="succes"
                             onClick={this.loginHandler}
+                            disabled={!isFormValid}
                         >
                             Войти
                         </Button>
                         <Button
                             type="primary"
                             onClick={this.registerHandler}
+                            disabled={!isFormValid}
                         >Регистрация</Button>
                     </form>
                 </div>

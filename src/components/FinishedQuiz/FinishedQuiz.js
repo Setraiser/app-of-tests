@@ -10,7 +10,6 @@ const FinishedQuiz = (props) => {
         if (results[key] === 'success') total++;
         return total;
     }, 0)
-    console.log(quiz, results);
     return (
         <div className = {classes.FinishedQuiz}>
             <ul>
